@@ -114,7 +114,7 @@ Plots are saved to:
 
 ---
 
-## Gradient checking (NumPy)
+## Gradient checking
 
 Gradient checking uses a **sigmoid** hidden activation so the network is differentiable everywhere (ReLU is not differentiable at 0, which makes numerical gradients disagree near 0).
 
