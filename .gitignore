@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Build / dist
+build/
+dist/
+*.egg-info/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Jupyter leftovers (even though we removed notebooks/)
+.ipynb_checkpoints/
+
+# Outputs
+outputs/logs/
+outputs/figures/*.png
+outputs/figures/*.jpg
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
