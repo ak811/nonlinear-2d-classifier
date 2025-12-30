@@ -1,19 +1,58 @@
-# ml-flower-spiral-nn
+# Nonlinear Decision Boundaries with a Two-Layer Neural Network
 
-A small, self-contained project that trains a 2-layer fully connected neural network on classic synthetic 2D datasets (**flower** and **spiral**) using:
+Implementation of a **regularized 2-layer multiclass classifier** on nonlinear 2D benchmarks (**flower**, **spiral**) in **NumPy** (explicit backprop) and **PyTorch** (module-based baseline).
 
-- **NumPy** (manual forward/backprop + gradient descent)
-- **PyTorch** (equivalent architecture + SGD)
+---
 
-It also includes **gradient checking** (with sigmoid activation) to verify the NumPy backprop implementation.
+### Model class
 
-## What this repo does
+A single-hidden-layer network:
 
-- Generates synthetic datasets (no external downloads)
-- Trains a 2-layer MLP (Linear → ReLU → Linear)
-- Plots decision boundaries and saves them to `outputs/figures/`
-- Runs gradient checking to compare analytic vs numerical gradients
-- Includes basic `pytest` tests
+```math
+z_2 = W_1 x + b_1
+\\
+a_2 = \phi(z_2)
+\\
+z_3 = W_2 a_2 + b_2
+\\
+p = \mathrm{softmax}(z_3)
+```
+
+with activation $\phi \in \{\mathrm{ReLU}, \sigma\}$. This is the simplest nonlinear hypothesis class that can represent **nonlinearly separable decision boundaries** (e.g., spiral), illustrating feature learning via learned hidden representations.
+
+### Objective
+
+**Empirical risk minimization** with **L2 regularization** (weight decay):
+
+```math
+\mathcal{L}
+=
+\frac{1}{n}\sum_{i=1}^{n} \mathrm{CE}(y_i, p_i)
++
+\frac{\lambda}{2}\left(\lVert W_1\rVert_F^2 + \lVert W_2\rVert_F^2\right).
+```
+
+Cross-entropy corresponds to the **negative log-likelihood** under a categorical model $p(y\mid x)$.
+
+### Optimization
+
+Full-batch **gradient descent / SGD** using analytically derived gradients; demonstrates the chain rule through **softmax + cross-entropy** (yielding $p-y$) and through the hidden nonlinearity.
+
+### Numerical stability
+
+Softmax is computed with log-sum-exp shifting to prevent overflow.
+
+### Verification
+
+**Finite-difference gradient checking** (using sigmoid to ensure differentiability everywhere) validates the NumPy backprop by comparing:
+
+```math
+\frac{\lVert g_{\text{num}} - g_{\text{ana}}\rVert}{\lVert g_{\text{num}} + g_{\text{ana}}\rVert}
+```
+
+against a small tolerance.
+
+---
 
 ## Quickstart
 
@@ -21,10 +60,7 @@ It also includes **gradient checking** (with sigmoid activation) to verify the N
 
 ```bash
 python -m venv .venv
-# macOS/Linux
 source .venv/bin/activate
-# Windows (PowerShell)
-# .venv\Scripts\Activate.ps1
 
 pip install -r requirements.txt
 ```
@@ -56,6 +92,8 @@ Plots are saved to:
 - `outputs/figures/flower-boundary.jpg`
 - `outputs/figures/spiral-boundary.jpg`
 
+---
+
 ## Results (saved plots)
 
 ### Flower decision boundary
@@ -65,6 +103,8 @@ Plots are saved to:
 ### Spiral decision boundary
 
 ![Spiral decision boundary](outputs/figures/spiral-boundary.jpg)
+
+---
 
 ## Gradient checking (NumPy)
 
@@ -78,31 +118,10 @@ python scripts/gradient_check.py
 
 The printed output includes the relative difference:
 
-\[
-\frac{\|g_{num}-g_{ana}\|}{\|g_{num}+g_{ana}\|}
-\]
+```math
+\frac{\lVert g_{\text{num}} - g_{\text{ana}}\rVert}{\lVert g_{\text{num}} + g_{\text{ana}}\rVert}
+```
 
 A typical pass condition is `diff < 1e-6`.
 
-## Tests
 
-```bash
-pytest
-```
-
-## Project structure
-
-```text
-ml-flower-spiral-nn/
-├─ src/                    # library code (NumPy + Torch + data + viz)
-├─ scripts/                # runnable entrypoints
-├─ outputs/
-│  ├─ figures/             # saved plots
-│  └─ logs/                # optional logs
-└─ tests/                  # pytest tests
-```
-
-## Notes
-
-- The code assumes **2D inputs** for decision boundary plotting.
-- Randomness is controlled via seeds in `src/config/defaults.py` for reproducibility.
