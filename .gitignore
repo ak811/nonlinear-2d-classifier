@@ -24,11 +24,6 @@ Thumbs.db
 # Jupyter leftovers (even though we removed notebooks/)
 .ipynb_checkpoints/
 
-# Outputs
-outputs/logs/
-outputs/figures/*.png
-outputs/figures/*.jpg
-
 # Pytest
 .pytest_cache/
 .coverage
