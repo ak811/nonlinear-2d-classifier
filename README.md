@@ -94,15 +94,23 @@ Plots are saved to:
 
 ---
 
-## Results (saved plots)
+## Results
+
+### Flower dataset
+
+![Flower dataset](outputs/figures/flower-dataset.png)
 
 ### Flower decision boundary
 
-![Flower decision boundary](outputs/figures/flower-boundary.jpg)
+![Flower decision boundary](outputs/figures/flower-boundary.png)
+
+### Spiral dataset
+
+![Spiral dataset](outputs/figures/spiral-dataset.png)
 
 ### Spiral decision boundary
 
-![Spiral decision boundary](outputs/figures/spiral-boundary.jpg)
+![Spiral decision boundary](outputs/figures/spiral-boundary.png)
 
 ---
 
